@@ -1,0 +1,317 @@
+\documentclass[11pt]{amsart}
+\usepackage{amsmath,amssymb,booktabs,lmodern}
+\usepackage[hidelinks]{hyperref}
+\usepackage{xurl}
+\usepackage{cleveref}
+\crefname{thm}{Theorem}{Theorems}
+\crefname{lem}{Lemma}{Lemmas}
+\crefname{cor}{Corollary}{Corollaries}
+\crefname{prop}{Proposition}{Propositions}
+\crefname{rem}{Remark}{Remarks}
+\crefname{section}{Section}{Sections}
+\crefname{appendix}{Appendix}{Appendices}
+\crefname{table}{Table}{Tables}
+\raggedbottom
+\emergencystretch=1.5em
+\hypersetup{pdftitle={Truncating Singular Values Below the Noise Level},pdfauthor={Yitzchak Shmalo}}
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}[thm]{Proposition}
+\theoremstyle{remark}
+\newtheorem{rem}[thm]{Remark}
+\numberwithin{equation}{section}
+\newcommand{\R}{\mathbb R}
+
+\title[Truncating singular values below the noise level]{Truncating Singular Values Below the Noise Level}
+\author[Yitzchak Shmalo]{Yitzchak Shmalo}
+\email{yitzchak.shmalo@gmail.com}
+\subjclass[2020]{Primary 60B20; Secondary 15A18, 62H25}
+\keywords{Random matrices, spiked model, singular value truncation, hard thresholding, operator norm}
+
+\begin{document}
+\begin{abstract}
+Let $W=S+R$, where $S$ is an $N\times M$ matrix of fixed rank and $R$ has independent $N(0,1/N)$ entries, with $M/N\to c\in(0,\infty)$, so that $\|R\|\to1+\sqrt c$. Let $W_T$ keep the singular values of $W$ above a cutoff $T>1+\sqrt c$ and set the others to zero. The almost sure limit of $\|W_T-S\|$ follows from results of Benaych-Georges and Nadakuditi and of Gavish and Donoho. We show that a singular value of $S$ that produces a singular value of $W$ above $T$ contributes less than $1+\sqrt c$ to this limit, whatever its size. Hence the limit, and the limits of $\|(W_T-S)v\|$ and $\|u^{\mathsf T}(W_T-S)\|$ for the singular vectors $u$, $v$ of $S$, are below $1+\sqrt c$ if and only if every singular value of $S$ that is at least $1+\sqrt c$ produces a singular value of $W$ above $T$. For every cutoff in $\bigl(1+\sqrt c,\,y(1+\sqrt c)\bigr)$, where $y(t)=\sqrt{(t^2+1)(t^2+c)}/t$, the limit of $\|W_T-S\|$, where it exists, is below $1+\sqrt c$ for every $S$, with a bound that does not depend on $S$; for every cutoff above $y(1+\sqrt c)$ some $S$ of rank one gives a larger limit. The interval, $(2,5/2)$ for square matrices, contains the cutoff that Gavish and Donoho found optimal for the mean squared error. For Gaussian noise this answers a question of Berlyand, Sandier, Shmalo and Zhang on pruning random weights.
+\end{abstract}
+\maketitle
+
+\section{Introduction}\label{sec:intro}
+A weight matrix of a trained network is often modeled as $W=S+R$, a deterministic matrix $S$ of small rank plus a random matrix $R$ with independent entries. Pruning $W$, that is, removing its small singular values, removes most of $R$. Berlyand, Sandier, Shmalo and Zhang~\cite[Example~5.5]{BSSZ} take $R$ to be $N\times N$ with independent $N(0,1/N)$ entries, $S$ with nonzero singular values larger than $1$, and $W'$ the matrix obtained from $W$ by setting to zero its singular values below $2+\epsilon$. For $3000\times3000$ matrices and $S$ diagonal with singular values $30,40,50,60,70$ they observe $\|S-W'\|\approx1$, which is below $2$, the limit of $\|R\|$, and they ask under what conditions on $R$ and $S$ the limiting error is a constant below this limit.
+
+We answer the question for Gaussian $R$ of any aspect ratio. Let $R$ be $N\times M$ with independent $N(0,1/N)$ entries and $M/N\to c\in(0,\infty)$, taken for all $N$ as the $N\times M$ corner of one infinite array of independent standard Gaussian variables, divided by $\sqrt N$; then $\|R\|\to e:=1+\sqrt c$ almost surely~\cite{Geman}; we call $e$ the noise level. Here $\|\cdot\|$ is the operator norm of a matrix and the Euclidean norm of a vector. Let $S=\sum_{i=1}^r\theta_iu_iv_i^{\mathsf T}$ with $r$ fixed, deterministic orthonormal $u_i\in\R^N$ and $v_i\in\R^M$, and distinct $\theta_1>\dots>\theta_r>0$ that do not depend on $N$. These are the standing assumptions. For $T>e$ let $W_T$ be obtained from $W=S+R$ by setting to zero the singular values that do not exceed $T$, so that $W'=W_{2+\epsilon}$. Besides $\|W_T-S\|$ we consider the errors along the singular vectors of $S$, namely $\|(W_T-S)v_i\|$ and $\|u_i^{\mathsf T}(W_T-S)\|$. Put
+\begin{equation}\label{eq:y}
+y(t)=\frac{\sqrt{(t^2+1)(t^2+c)}}{t},\qquad t>0 .
+\end{equation}
+
+Two results are known. Benaych-Georges and Nadakuditi~\cite[Theorems~2.8 and~2.9]{BGN} prove that the $i$-th largest singular value of $W$ converges almost surely to $y(\theta_i)$ if $\theta_i>c^{1/4}$ and to $e$ otherwise, and they give the limits of the inner products between the singular vectors of $W$ and those of $S$. The function $y$ decreases on $(0,c^{1/4}]$ and increases on $[c^{1/4},\infty)$, with minimum $y(c^{1/4})=e$. For $T>e$ let $\tau=\tau(T)$ be the unique point of $(c^{1/4},\infty)$ with $y(\tau)=T$. If $\theta_i>\tau$, the singular value of $W$ near $y(\theta_i)$ is above $T$ for large $N$, and we say that $\theta_i$ is kept; if $\theta_i<\tau$, we say that it is removed.
+
+Gavish and Donoho~\cite[Section~5]{GD} consider the matrix $\eta(W)$ obtained by applying a function $\eta$, called a shrinker, to each singular value of $W$. For a conservative shrinker, that is, a continuous $\eta$ with $\eta(\sigma)=0$ for $\sigma\le e+\delta$ and some $\delta>0$~\cite[Definition~3]{GD}, they prove that $\|\eta(W)-S\|$ converges almost surely to the largest of $r$ numbers, one for each $\theta_i$: the norm of a $2\times2$ matrix determined by $c$, $\theta_i$ and the value of $\eta$ at $y(\theta_i)$~\cite[Lemmas~8 and~9]{GD}, whose singular values they compute~\cite[Lemma~13]{GD}. Their results are stated for aspect ratio at most $1$ and apply here after the transposition or the rescaling in the proof of \cref{lem:bgn}. Truncation is the shrinker with $\eta(\sigma)=\sigma$ for $\sigma>T$ and $\eta(\sigma)=0$ for $\sigma\le T$, so $W_T=\eta(W)$. It is not continuous, but~\cite[Lemma~8]{GD} uses continuity of $\eta$ only at $y(\theta_i)$, which holds when $\theta_i\ne\tau$, so for $c\le1$ the limit of $\|W_T-S\|$ is given by~\cite[Lemmas~7--9 and~13]{GD}. The same reduction, after the transposition or the rescaling, gives the limit for every $c>0$ (\cref{thm:main}).
+
+The question of~\cite{BSSZ} is for which $S$ and $T$ this limit is below $e$. A kept $\theta_i=t$ contributes $\rho(t)$ to it, where
+\begin{equation}\label{eq:rho}
+\rho(t)^2=\frac{J+\sqrt{J^2-4K}}2,\qquad J=1+c+\frac{3c}{t^2},\qquad K=c\Bigl(1+\frac1{t^2}\Bigr)\Bigl(1+\frac c{t^2}\Bigr),
+\end{equation}
+and a removed $\theta_i$ contributes $\theta_i$ itself. The answer rests on the estimate
+\begin{equation}\label{eq:below}
+\rho(t)<e\qquad\text{for every }c>0\text{ and every }t>c^{1/4}
+\end{equation}
+(\cref{lem:below}): a kept $\theta_i$ contributes less than the noise level, whatever its size.
+
+\begin{thm}\label{thm:main}
+Under the standing assumptions let $T>e$, and suppose that $\theta_i\ne\tau$ for every $i$. Almost surely,
+\[
+\lim_{N\to\infty}\|W_T-S\|=\max\Bigl(\max_{i:\,\theta_i>\tau}\rho(\theta_i),\ \max_{i:\,\theta_i<\tau}\theta_i\Bigr),
+\]
+with the convention $\max\varnothing=0$, where $\rho(t)>0$ is given by~\eqref{eq:rho}. The function $\rho$ is strictly decreasing on $(c^{1/4},\infty)$, $\rho(t)\to e$ as $t\downarrow c^{1/4}$, and $\rho(t)\to\max(1,\sqrt c)$ as $t\to\infty$. In particular $\rho(t)<e$ for every $t>c^{1/4}$.
+\end{thm}
+
+\begin{prop}\label{prop:direction}
+Under the hypotheses of \cref{thm:main}, almost surely
+\[
+\|(W_T-S)v_i\|\to q_R(\theta_i),\qquad \|u_i^{\mathsf T}(W_T-S)\|\to q_L(\theta_i)\qquad\text{if }\theta_i>\tau,
+\]
+where $q_R(t)^2=1+c\,t^{-2}-c\,t^{-4}$ and $q_L(t)^2=c+c\,t^{-2}-c^2t^{-4}$, and both limits equal $\theta_i$ if $\theta_i<\tau$.
+\end{prop}
+
+For a kept $\theta_i$ both limits in \cref{prop:direction} are at most $\rho(\theta_i)$, and as $\theta_i\to\infty$ they tend to $1$ and $\sqrt c$. For $c=1$ and every $\theta_i$ kept, $\max_i q_R(\theta_i)$ is the expression $f_W$ of~\cite[(37)]{BSSZ}, the limit of the error along the right singular vectors of $S$; at $\theta_i=3$, $q_R(3)=1.048$ and $\rho(3)=1.234$.
+
+Together with~\eqref{eq:below}, \cref{thm:main} and \cref{prop:direction} give the following answer.
+
+\begin{cor}\label{cor:criterion}
+Under the hypotheses of \cref{thm:main} the following are equivalent:
+\begin{enumerate}
+\item $\lim_N\|W_T-S\|<e$;
+\item $\lim_N\|(W_T-S)v_i\|<e$ and $\lim_N\|u_i^{\mathsf T}(W_T-S)\|<e$ for every $i$;
+\item $\theta_i>\tau$ for every $i$ with $\theta_i\ge e$.
+\end{enumerate}
+If $T\in(e,y(e))$, then $\tau<e$, the three conditions hold for every $S$ with $\theta_i\ne\tau$ for all $i$, and
+\begin{equation}\label{eq:uniform}
+\lim_N\|W_T-S\|\le\max\bigl(\rho(\tau),\tau\bigr)<e ;
+\end{equation}
+the supremum of the left side over all such $S$ equals the right side. If $T=y(e)$, then $\tau=e$, the three conditions hold for every $S$ with $\theta_i\ne e$ for all $i$, and the supremum of the limit over such $S$ is $e$. If $T>y(e)$, there is an $S$ of rank one for which the three conditions fail.
+\end{cor}
+
+For $c=1$, $y(e)=y(2)=5/2$: in the setting of~\cite[Example~5.5]{BSSZ} every cutoff $2+\epsilon$ with $0<\epsilon<1/2$ gives an error with limit below $2$ for every $S$ with no $\theta_i$ equal to $\tau(2+\epsilon)$. For the singular values $30,\dots,70$ used there, \eqref{eq:rho} gives $\rho(30)=1.0174$, which matches the observed $\|S-W'\|\approx1$, and $q_R(30)=1.0006$.
+
+The cutoff that Gavish and Donoho~\cite{GDhard} found to be optimal for the mean squared error falls in the interval of \cref{cor:criterion}. Their cutoff for an $m\times n$ matrix with noise of variance $1/n$ and $m/n\to b\in(0,1]$ is~\cite[(11)]{GDhard}
+\[
+\lambda_*(b)=\Bigl(2(b+1)+\frac{8b}{b+1+\sqrt{b^2+14b+1}}\Bigr)^{1/2}.
+\]
+In our normalization this is $T_*=\lambda_*(c)$ for $c\le1$ (apply it to $W^{\mathsf T}$), and $T_*=\sqrt c\,\lambda_*(1/c)$ for $c>1$.
+
+\begin{cor}\label{cor:gd}
+For every $c\in(0,\infty)$, $e<T_*<y(e)$. In particular, for $c=1$ the cutoff $T_*=4/\sqrt3$ has $\tau=\sqrt3$, and $\lim_N\|W_{T_*}-S\|\le\sqrt3$ for every $S$ with no $\theta_i$ equal to $\sqrt3$.
+\end{cor}
+
+\begin{rem}\label{rem:best}
+Since $\rho$ is decreasing and $\tau(T)$ is increasing in $T$, the bound $\max(\rho(\tau),\tau)$ in~\eqref{eq:uniform} is smallest at the cutoff $T_0=y(\tau_0)$, where $\tau_0$ solves $\rho(\tau_0)=\tau_0$. The solution exists and is unique, because $\rho(t)-t$ is strictly decreasing, tends to $e-c^{1/4}>0$ as $t\downarrow c^{1/4}$ and to $-\infty$ as $t\to\infty$. For $c=1$, $\tau_0^2=1+\sqrt2$ and $T_0=(2+\sqrt2)/\sqrt{1+\sqrt2}$, so $\tau_0\approx1.5538$ and $T_0\approx2.1974$. Since $\tau_0=\rho(\tau_0)<e$ by~\eqref{eq:below} and $y$ increases on $[c^{1/4},\infty)$, $T_0=y(\tau_0)$ lies in $(e,y(e))$. For shrinkers, Gavish and Donoho~\cite[Section~6.2]{GD} propose the one that makes the limit of $\|\eta(W)-S\|$ smallest, and Leeb~\cite{Leeb} shows that their shrinker is optimal only for square matrices and finds the optimal one for every aspect ratio.
+\end{rem}
+
+
+\section{Proofs}\label{sec:proofs}
+Write $\alpha_i=\langle\tilde u_i,u_i\rangle$ and $\beta_i=\langle\tilde v_i,v_i\rangle$, where $\tilde u_i,\tilde v_i$ are unit left and right singular vectors of $W$ for its $i$-th largest singular value $\tilde\sigma_i$, with the sign of the pair $(\tilde u_i,\tilde v_i)$ chosen so that $\beta_i\ge0$. Let $k$ be the number of $i$ with $\theta_i>c^{1/4}$; these are $i=1,\dots,k$.
+
+\begin{lem}\label{lem:bgn}
+Let $i\le k$ and $t=\theta_i$. Almost surely, $\tilde\sigma_i\to y(t)$,
+\[
+\alpha_i^2\to\frac{t^4-c}{t^2(t^2+1)},\qquad \beta_i^2\to\frac{t^4-c}{t^2(t^2+c)},\qquad \alpha_i\beta_i\to\frac{t^4-c}{t^3y(t)},
+\]
+and $\langle\tilde u_i,u_j\rangle\to0$, $\langle\tilde v_i,v_j\rangle\to0$ for $j\ne i$. Moreover $\tilde\sigma_{k+1}\to e$.
+\end{lem}
+
+\begin{proof}
+For $c\le1$ consider $W^{\mathsf T}=S^{\mathsf T}+R^{\mathsf T}$; $R^{\mathsf T}$ is $M\times N$ with variance $1/N$, the reciprocal of its number of columns, and $M/N\to c$. This is the normalization of~\cite[Section~3.1]{BGN}. For $c>1$ write $R=\sqrt c\,X$, where $X$ has variance $1/M$, and $W=\sqrt c\,(X+S/\sqrt c)$, which is the same normalization with ratio $N/M\to1/c$ and singular values $\theta_i/\sqrt c$. In both cases the formulas~\cite[(9)--(11)]{BGN} become the ones stated; for $c>1$ one checks that $\sqrt c\,y_{1/c}(t/\sqrt c)=y(t)$, where $y_{c'}$ denotes the function~\eqref{eq:y} with $c'$ in place of $c$, and $\sqrt c\,(1/c)^{1/4}=c^{1/4}$.
+
+The perturbation in~\cite{BGN} has random singular vectors, independent of the noise. A deterministic $S$ reduces to that case. Let $U$, $V$ be independent Haar orthogonal matrices of sizes $N$ and $M$, independent of $R$, and put $R'=U^{\mathsf T}RV$. Given $(U,V)$, $R'$ has independent $N(0,1/N)$ entries, so $R'$ is independent of $(U,V)$ and $W=U(R'+U^{\mathsf T}SV)V^{\mathsf T}$. The vectors $U^{\mathsf T}u_1,\dots,U^{\mathsf T}u_r$ are the first $r$ columns of a Haar orthogonal matrix, which is the orthonormalized model of~\cite[Section~2.1]{BGN} with $\nu$ the standard Gaussian distribution, and likewise for $V^{\mathsf T}v_i$. The singular values of $W$ are those of $R'+U^{\mathsf T}SV$, its singular vectors are obtained by applying $U$ and $V$, and the inner products with $u_i$ and $v_i$ are unchanged.
+
+The limits of $\tilde\sigma_i$, $\alpha_i^2$ and $\beta_i^2$ are~\cite[Theorems~2.8 and~2.9(a), (b)]{BGN}, the inner products $\langle\tilde u_i,u_j\rangle$ and $\langle\tilde v_i,v_j\rangle$ with $j\ne i$ tend to $0$ by~\cite[Theorem~2.9(c)]{BGN}, and $\tilde\sigma_{k+1}\to e$ is~\cite[Theorem~2.8]{BGN} with~\cite{Geman}. The last statement of~\cite[Theorem~2.9(c)]{BGN} relates the two projections: in the orthonormalized model,
+\[
+\langle\tilde u_i,u_i\rangle-\varphi\,\theta_i\,\langle\tilde v_i,v_i\rangle\to0\qquad\text{almost surely},
+\]
+where $\varphi=\int z\,(z^2-x^2)^{-1}\,d\mu(x)>0$, $z$ is the limit of the singular value and $\mu$ is the limiting singular value distribution of the noise, supported below $z$. After the transposition (for $c\le1$) or the rescaling (for $c>1$) this says that one of $\alpha_i,\beta_i$ is, up to a quantity tending to $0$ almost surely, a fixed positive multiple of the other. With the sign of the pair chosen so that $\beta_i\ge0$, as above, $\alpha_i$ is therefore nonnegative up to a quantity tending to $0$. Since $\beta_i^2$ has a positive limit, $\beta_i$ converges, and then so does $\alpha_i$, to the nonnegative square root of the limit of $\alpha_i^2$. Hence $\alpha_i\beta_i$ tends to the nonnegative square root of $(t^4-c)^2/(t^6y(t)^2)$.
+\end{proof}
+
+The rest of the proof of \cref{thm:main} follows~\cite[Section~5]{GD}: \cref{lem:gram} and the proof of \cref{thm:main} give, for truncation, the reduction to $2\times2$ matrices of~\cite[Lemmas~8 and~9]{GD}, and \cref{lem:block} is~\cite[Lemma~13]{GD} at $\eta=y(t)$. The next identity reduces operator norms of sums of rank-one matrices to Gram matrices. For a matrix $A$ write $G_A=A^{\mathsf T}A$.
+
+\begin{lem}\label{lem:gram}
+For matrices $L$, $C$, $Q$ of sizes $n\times p$, $p\times q$ and $m\times q$, $\|LCQ^{\mathsf T}\|=\|G_L^{1/2}\,C\,G_Q^{1/2}\|$.
+\end{lem}
+
+\begin{proof}
+For every vector $x$ we have $\|Lx\|^2=x^{\mathsf T}G_Lx=\|G_L^{1/2}x\|^2$. Hence $\|LY\|=\|G_L^{1/2}Y\|$ for every matrix $Y$ with $p$ rows. Applying this twice, and using that a matrix and its transpose have the same norm,
+\[
+\|LCQ^{\mathsf T}\|=\|G_L^{1/2}CQ^{\mathsf T}\|=\|Q\,C^{\mathsf T}G_L^{1/2}\|=\|G_Q^{1/2}C^{\mathsf T}G_L^{1/2}\|=\|G_L^{1/2}CG_Q^{1/2}\|. \qedhere
+\]
+\end{proof}
+
+\begin{lem}\label{lem:block}
+Let $t>c^{1/4}$, let $\tilde u,u$ and $\tilde v,v$ be unit vectors in two Euclidean spaces, and let $B=y\,\tilde u\tilde v^{\mathsf T}-t\,uv^{\mathsf T}$ with $y=y(t)$, $\alpha=\langle\tilde u,u\rangle$ and $\beta=\langle\tilde v,v\rangle$. If $\alpha^2$, $\beta^2$ and $\alpha\beta$ equal the limits in \cref{lem:bgn}, then $\|B\|=\rho(t)$.
+\end{lem}
+
+\begin{proof}
+$B$ has rank at most two, so its nonzero squared singular values are the roots of $E^2-JE+K$, with $J=\|B\|_F^2$ and $K$ the product of the two squared singular values; we show that these are the $J$ and $K$ of~\eqref{eq:rho}. Expanding, $J=y^2+t^2-2ty\,\alpha\beta$. By the Cauchy--Binet formula $K=y^2t^2(1-\alpha^2)(1-\beta^2)$. From \cref{lem:bgn},
+\[
+1-\alpha^2=\frac{t^2+c}{t^2(t^2+1)},\qquad 1-\beta^2=\frac{c(t^2+1)}{t^2(t^2+c)},\qquad \alpha\beta=\frac{t^4-c}{t^3y},
+\]
+so $K=y^2c/t^2=c(1+t^{-2})(1+ct^{-2})$, and $J=y^2+t^2-2(t^4-c)/t^2=1+c+3c/t^2$, using $y^2=t^2+1+c+c/t^2$.
+\end{proof}
+
+\begin{lem}\label{lem:below}
+On $(c^{1/4},\infty)$ the function $\rho$ is strictly decreasing and $\rho<e$. Moreover $\rho(t)\to e$ as $t\downarrow c^{1/4}$ and $\rho(t)\to\max(1,\sqrt c)$ as $t\to\infty$.
+\end{lem}
+
+\begin{proof}
+Put $s=\sqrt c$ and $\kappa =s/t^2$, which decreases from $1$ to $0$ as $t$ increases on $(c^{1/4},\infty)$. Then $J=1+s^2+3s\kappa$ and $K=s(s+\kappa)(1+s\kappa)$, and
+\[
+J^2-4K=(1-s^2)^2+2s\kappa+2s^3\kappa+5s^2\kappa^2>0,
+\]
+so $E=\rho^2$, the larger root of $P(E)=E^2-JE+K$, satisfies $2E-J=\sqrt{J^2-4K}>0$. Differentiating $P(E)=0$ in $\kappa$,
+\[
+(2E-J)\,\frac{dE}{d\kappa}=E\,\frac{dJ}{d\kappa}-\frac{dK}{d\kappa}=s\bigl(3E-1-s^2-2s\kappa\bigr).
+\]
+Since $E>J/2$, $3E>\tfrac32(1+s^2+3s\kappa)>1+s^2+2s\kappa$, so $E$ is strictly increasing in $\kappa$, and $\rho$ is strictly decreasing in $t$.
+
+A direct expansion gives
+\[
+P(e^2)=s(1-\kappa)\bigl(2+5s+2s^2-s\kappa\bigr)>0,\qquad 2e^2-J=1+4s+s^2-3s\kappa>0 .
+\]
+The first inequality says that $e^2$ is not between the two roots of $P$, and the second that $e^2$ lies to the right of their midpoint $J/2$. So both roots are smaller than $e^2$, and $\rho<e$. As $\kappa \to1$, $P(e^2)\to0$ while $e^2$ stays to the right of $J/2$, so the larger root tends to $e^2$. As $\kappa \to0$, $J\to1+c$ and $K\to c$, whose roots are $1$ and $c$.
+\end{proof}
+
+\begin{proof}[Proof of \cref{thm:main}]
+Let $I=\{i:\theta_i>\tau\}$. By \cref{lem:bgn}, almost surely $\tilde\sigma_i\to y(\theta_i)>T$ for $i\in I$, $\tilde\sigma_i\to y(\theta_i)<T$ for $i\le k$ with $\theta_i<\tau$ (because $y$ is increasing on $(c^{1/4},\infty)$), and $\tilde\sigma_{k+1}\to e<T$. So for all large $N$ the singular values of $W$ above $T$ are exactly $\tilde\sigma_i$, $i\in I$, and
+\[
+W_T-S=\sum_{i\in I}\tilde\sigma_i\tilde u_i\tilde v_i^{\mathsf T}-\sum_{i=1}^r\theta_iu_iv_i^{\mathsf T}=LCQ^{\mathsf T},
+\]
+where the columns of $L$ are $\tilde u_i$ ($i\in I$) and $u_1,\dots,u_r$, the columns of $Q$ are $\tilde v_i$ ($i\in I$) and $v_1,\dots,v_r$, and $C$ is diagonal with entries $\tilde\sigma_i$ ($i\in I$) and $-\theta_1,\dots,-\theta_r$. The vectors $\tilde u_i$ are orthonormal, and so are the $u_i$; by \cref{lem:bgn} the only entries of $G_L$ off the diagonal that do not tend to $0$ are $\langle\tilde u_i,u_i\rangle=\alpha_i$, $i\in I$, and likewise for $G_Q$ with $\beta_i$. Hence $G_L$, $G_Q$ and $C$ converge almost surely to limits $\bar G_L$, $\bar G_Q$ and $\bar C$ which, after a common permutation of the coordinates, are block diagonal with a $2\times2$ block for each $i\in I$ and a $1\times1$ block for each $i\notin I$. The square root is continuous on positive semidefinite matrices, so by \cref{lem:gram}
+\[
+\|W_T-S\|\to\|\bar G_L^{1/2}\bar C\bar G_Q^{1/2}\|=\max_{\text{blocks}}\|\bar G_L^{1/2}\bar C\bar G_Q^{1/2}\|_{\text{block}} .
+\]
+A block with $i\notin I$ is the number $-\theta_i$. A block with $i\in I$ is, by \cref{lem:gram} again, the norm of $y\,\tilde u\tilde v^{\mathsf T}-\theta_i\,uv^{\mathsf T}$ for unit vectors in $\R^2$ with the limiting inner products of \cref{lem:bgn}, which is $\rho(\theta_i)$ by \cref{lem:block}. The remaining statements are \cref{lem:below}.
+\end{proof}
+
+\begin{proof}[Proof of \cref{prop:direction}]
+For $i\in I$, $(W_T-S)v_i=\tilde\sigma_i\beta_i\tilde u_i-\theta_iu_i+o(1)$ by the limits of the inner products in \cref{lem:bgn}, so its squared norm tends to $t^2+y^2\beta^2-2ty\alpha\beta$ with $t=\theta_i$ and the limits of \cref{lem:bgn}. Here $y^2\beta^2=(t^2+1)(t^4-c)/t^4$ and $2ty\alpha\beta=2(t^4-c)/t^2$, which gives $q_R^2$. The left case is the same with $\alpha$ and $\beta$ exchanged, and $y^2\alpha^2=(t^2+c)(t^4-c)/t^4$. For $i\notin I$, $(W_T-S)v_i=-\theta_iu_i+o(1)$ and $u_i^{\mathsf T}(W_T-S)=-\theta_iv_i^{\mathsf T}+o(1)$. Both limits for $i\in I$ are at most $\rho(\theta_i)$, since $(W_T-S)v_i$ is, up to $o(1)$, the $i$-th block applied to a unit vector.
+\end{proof}
+
+\begin{proof}[Proof of \cref{cor:criterion}]
+(1) implies (2) because $\|(W_T-S)v_i\|$ and $\|u_i^{\mathsf T}(W_T-S)\|$ are at most $\|W_T-S\|$. If (3) fails, some $\theta_i\ge e$ has $\theta_i<\tau$, and by \cref{prop:direction} $\|(W_T-S)v_i\|\to\theta_i\ge e$, so (2) fails. If (3) holds, every term in the maximum of \cref{thm:main} is below $e$: a kept $\theta_i$ contributes $\rho(\theta_i)<e$ by \cref{lem:below}, and a removed one has $\theta_i<e$. This gives (1).
+
+Since $e>c^{1/4}$ and $y$ is increasing on $(c^{1/4},\infty)$, $\tau<e$ if and only if $T<y(e)$. In that case (3) holds for every $S$. A kept $\theta_i>\tau$ contributes $\rho(\theta_i)<\rho(\tau)$ because $\rho$ is decreasing, and a removed one contributes $\theta_i<\tau$; this is~\eqref{eq:uniform}, and $\rho(\tau)<e$, $\tau<e$. For $S$ of rank one, $\theta_1\downarrow\tau$ gives limits $\rho(\theta_1)\to\rho(\tau)$ and $\theta_1\uparrow\tau$ gives limits $\theta_1\to\tau$, so the supremum over $S$ is the right side of~\eqref{eq:uniform}. If $T=y(e)$, then $\tau=e$, (3) holds whenever no $\theta_i$ equals $e$, and $r=1$ with $\theta_1\uparrow e$ gives limits $\theta_1\to e$. If $T>y(e)$, then $\tau>e$, and $r=1$ with $\theta_1\in(e,\tau)$ violates (3).
+\end{proof}
+
+\begin{proof}[Proof of \cref{cor:gd}]
+Let first $c\le1$ and, as in the proof of \cref{lem:below}, $s=\sqrt c$, so $b=s^2$ and $e=1+s$. Since $\sqrt{b^2+14b+1}\ge1+b$, we have $2(1+s^2)<\lambda_*(b)^2\le2(1+s^2)+4s^2/(1+s^2)$. The lower bound is at least $(1+s)^2=e^2$. For the upper bound,
+\[
+y(e)^2-2(1+s^2)-\frac{4s^2}{1+s^2}=\frac{s\,(2s^4+s^3-4s^2+s+2)}{(1+s)^2(1+s^2)}>0,
+\]
+because $2s^4+2\ge4s^2$. So $e<\lambda_*(c)<y(e)$. For $c>1$, the identities $1+\sqrt c=\sqrt c\,(1+1/\sqrt c)$ and $y_c(\sqrt c\,t)=\sqrt c\,y_{1/c}(t)$, with $y_{c'}$ as in the proof of \cref{lem:bgn}, show that the interval $(e,y(e))$ for $c$ is $\sqrt c$ times the interval for $1/c$, which contains $\lambda_*(1/c)$. For $c=1$, $\lambda_*(1)=4/\sqrt3$ and $y(\sqrt3)=4/\sqrt3$, so $\tau=\sqrt3$; by \eqref{eq:rho}, $\rho(\sqrt3)\approx1.479<\sqrt3$, and \eqref{eq:uniform} gives the bound $\sqrt3$.
+\end{proof}
+
+\section{Simulations at finite size}\label{sec:numerics}
+\Cref{tab:sim} compares \cref{thm:main} and \cref{prop:direction} with simulations. The matrix $S$ has rank three, with singular values $\theta_1=3e$, $\theta_2=1.15e$ and $\theta_3=0.9e$. Its singular vectors are the columns of random $N\times3$ and $M\times3$ matrices with orthonormal columns, obtained by orthonormalizing the columns of Gaussian matrices and drawn afresh in each draw. $R$ is $N\times cN$ with independent $N(0,1/N)$ entries, $N=1000$, and each row summarizes $40$ independent draws.
+
+The first cutoff, $T=e+0.1$, keeps all three singular values. The second is placed in each draw just above the third largest singular value of $W$, and the third just above the second largest. For every fixed $T\in(y(\theta_3),y(\theta_2))$ the matrix $W_T$ is, for large $N$, the one obtained by keeping the two largest singular values of $W$, so \cref{thm:main} gives the limit $\max(\rho(\theta_1),\rho(\theta_2),\theta_3)$ for the second cutoff; likewise, from $T\in(y(\theta_2),y(\theta_1))$, the limit for the third cutoff is $\max(\rho(\theta_1),\theta_2)$.
+
+In all $360$ draws, and in $180$ further draws at $N=2000$, the error is below $e$ exactly when every $\theta_i\ge e$ is kept. Where $\theta_2=1.15e$ is removed the mean error is within $0.05$ percent of its limit $1.15e>e$, and every draw within $0.2$ percent, as \cref{cor:criterion} predicts. In \cref{tab:sim} the means differ from the limits by at most $0.4$ percent for the operator norm and $1.0$ percent along $v_2$. Two entries along $v_2$ lie about three standard errors above their limits ($c=1$ and $c=4$, second cutoff). At $N=2000$, with $20$ draws, they are $1.0772\pm0.0049$ against $1.0739$ and $1.1392\pm0.0038$ against $1.1436$, and the entry for $c=4$ and the first cutoff is $1.1365\pm0.0034$ against $1.1436$. Along $v_2$ every mean at $N=2000$ is within $2.2$ standard errors of its limit. In operator norm the means exceed the limits at both sizes, by $0.0045$, $0.0032$, $0.0024$ at $N=1000$ and $0.0028$, $0.0018$, $0.0011$ at $N=2000$ for the second cutoff.
+
+\begin{table}[ht]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{cccccc}
+\toprule
+$c$ & cutoff & $\|W_T-S\|$ & limit & largest gap & $\|(W_T-S)v_2\|$ / $q_R(\theta_2)$\\
+\midrule
+$0.25$ & $e+0.1$ & $1.1573\pm0.0027$ & $1.1535$ & $0.031$ & $1.0253\pm0.0036$ / $1.0275$\\
+$0.25$ & removes $\theta_3$ & $1.3545\pm0.0004$ & $1.3500$ & $0.008$ & $1.0289\pm0.0034$ / $1.0275$\\
+$0.25$ & removes $\theta_2,\theta_3$ & $1.7258\pm0.0001$ & $1.7250$ & $0.001$ & --\\
+$1$ & $e+0.1$ & $1.4588\pm0.0037$ & $1.4550$ & $0.042$ & $1.0782\pm0.0033$ / $1.0739$\\
+$1$ & removes $\theta_3$ & $1.8032\pm0.0004$ & $1.8000$ & $0.005$ & $1.0834\pm0.0032$ / $1.0739$\\
+$1$ & removes $\theta_2,\theta_3$ & $2.3006\pm0.0001$ & $2.3000$ & $0.002$ & --\\
+$4$ & $e+0.1$ & $2.3084\pm0.0041$ & $2.3071$ & $0.019$ & $1.1498\pm0.0036$ / $1.1436$\\
+$4$ & removes $\theta_3$ & $2.7024\pm0.0003$ & $2.7000$ & $0.004$ & $1.1547\pm0.0040$ / $1.1436$\\
+$4$ & removes $\theta_2,\theta_3$ & $3.4504\pm0.0001$ & $3.4500$ & $0.000$ & --\\
+\bottomrule
+\end{tabular}
+\caption{Mean $\pm$ standard error of $\|W_T-S\|$ over $40$ draws at $N=1000$, its limit from \cref{thm:main}, the largest relative gap between a draw and the limit, and the error along $v_2$ against its limit from \cref{prop:direction} when $\theta_2$ is kept. Here $e=1.5$, $2$, $3$ for $c=0.25$, $1$, $4$.}
+\label{tab:sim}
+\end{table}
+
+\section*{Acknowledgments and funding}
+The research presented in this paper was supported by the European Research Council (ERC) under the European Union's Horizon Europe research and innovation programme (grant agreement No.~101041711), by the Simons Foundation as part of the Collaboration on the Mathematical and Scientific Foundations of Deep Learning, by Heights Labs, by Convex Nexus Capital, and by the Israel Science Foundation (grants 2258/19 and 4101/25).
+
+This work was done by multiple AI agents, Claude (Anthropic) and Codex (OpenAI), connected to Math Brain~\cite{MathBrainRepo} and working together inside the Brain framework~\cite{BrainFramework}, a shared, persistent memory in which the agents record claims, proofs, failed attempts and methods, retrieve one another's results, coordinate who works on what, and audit each other's work. The method is described in~\cite{MathBrainPaper}.
+
+\section*{Declaration of competing interest}
+The author holds equity in Heights Labs and in Convex Nexus Capital and has a management role at Convex Nexus Capital.
+
+\section*{Code and data availability}
+The \LaTeX\ source, the simulation programs and their output tables are available at \url{https://github.com/yspennstate/truncated-svd-below-noise-level}.
+
+\section*{Declaration of generative AI and AI-assisted technologies}
+The AI agents Claude (Anthropic) and Codex (OpenAI) did this work through Math Brain~\cite{MathBrainRepo}: they derived \cref{thm:main,prop:direction,cor:criterion,cor:gd,rem:best,lem:below} and the computation of \cref{lem:block}, and wrote and ran the simulation programs and checked their output against the formulas; Claude wrote the text. The question is from~\cite{BSSZ}, the limits of singular values and vectors are Benaych-Georges and Nadakuditi's~\cite{BGN}, the reduction to $2\times2$ matrices and the formula for their singular values are Gavish and Donoho's~\cite{GD}, and the cutoff $T_*$ is from~\cite{GDhard}. The author selected the problem, directed the work and is responsible for the content of the paper and for decisions concerning its dissemination.
+
+\appendix
+\section{Notation}\label{sec:notation}
+\begin{center}
+\footnotesize
+\begin{tabular}{lp{0.48\textwidth}l}
+\toprule
+Symbol & Meaning & First appears\\
+\midrule
+$W=S+R$ & observed matrix, signal of fixed rank, Gaussian noise & \cref{sec:intro}\\
+$N$, $M$, $c$ & dimensions of $W$, with $M/N\to c$ & \cref{sec:intro}\\
+$\|\cdot\|$ & operator norm of a matrix, Euclidean norm of a vector & \cref{sec:intro}\\
+$e$ & $1+\sqrt c$, the limit of $\|R\|$ & \cref{sec:intro}\\
+$r$, $\theta_i$, $u_i$, $v_i$ & rank, singular values and singular vectors of $S$ & \cref{sec:intro}\\
+$T$, $W_T$ & cutoff, and $W$ with its singular values $\le T$ set to $0$ & \cref{sec:intro}\\
+$y(t)$ & location of the singular value of $W$ produced by $\theta_i=t$ & \eqref{eq:y}\\
+$\tau=\tau(T)$ & the point of $(c^{1/4},\infty)$ with $y(\tau)=T$ & \cref{sec:intro}\\
+$\rho(t)$, $J$, $K$ & limit of the error contributed by a kept $\theta_i=t$ & \eqref{eq:rho}\\
+$q_R$, $q_L$ & limits of the error along $v_i$ and $u_i$ & \cref{prop:direction}\\
+$b$, $\lambda_*(b)$, $T_*$ & cutoff of~\cite{GDhard} optimal for the mean squared error, in our normalization & \cref{sec:intro}\\
+$\tau_0$, $T_0$ & cutoff minimizing the bound~\eqref{eq:uniform} & \cref{rem:best}\\
+$\tilde\sigma_i$, $\tilde u_i$, $\tilde v_i$ & $i$-th singular value of $W$ and its singular vectors & \cref{sec:proofs}\\
+$\alpha_i$, $\beta_i$ & $\langle\tilde u_i,u_i\rangle$, $\langle\tilde v_i,v_i\rangle$ & \cref{sec:proofs}\\
+$k$ & number of $i$ with $\theta_i>c^{1/4}$ & \cref{sec:proofs}\\
+$G_A$ & Gram matrix $A^{\mathsf T}A$ & \cref{lem:gram}\\
+$I$ & indices of the kept $\theta_i$, $\{i:\theta_i>\tau\}$ & proof of \cref{thm:main}\\
+$L$, $C$, $Q$ & factors with $W_T-S=LCQ^{\mathsf T}$ & proof of \cref{thm:main}\\
+$s$, $\kappa$, $E$ & $\sqrt c$, $\sqrt c/t^2$, and $\rho(t)^2$ & proof of \cref{lem:below}\\
+$P$ & the polynomial $E^2-JE+K$ & proof of \cref{lem:below}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{thebibliography}{Shm26c}
+
+\bibitem[BGN12]{BGN}
+F.~Benaych-Georges and R.~R. Nadakuditi, The singular values and vectors of low rank perturbations of large rectangular random matrices, \emph{J. Multivariate Anal.} \textbf{111} (2012), 120--135, \href{https://arxiv.org/abs/1103.2221}{arXiv:1103.2221} (statement numbers as there).
+
+\bibitem[BSSZ24]{BSSZ}
+L.~Berlyand, E.~Sandier, Y.~Shmalo and L.~Zhang, Enhancing accuracy in deep learning using random matrix theory, \emph{J. Mach. Learn.} \textbf{3} (2024), no.~4, 347--412, \href{https://doi.org/10.4208/jml.231220}{doi:10.4208/jml.231220}; \href{https://arxiv.org/abs/2310.03165}{arXiv:2310.03165} (numbering as there).
+
+\bibitem[GD14]{GDhard}
+M.~Gavish and D.~L. Donoho, The optimal hard threshold for singular values is $4/\sqrt3$, \emph{IEEE Trans. Inform. Theory} \textbf{60} (2014), no.~8, 5040--5053.
+
+\bibitem[GD17]{GD}
+M.~Gavish and D.~L. Donoho, Optimal shrinkage of singular values, \emph{IEEE Trans. Inform. Theory} \textbf{63} (2017), no.~4, 2137--2152, \href{https://arxiv.org/abs/1405.7511v3}{arXiv:1405.7511v3} (statement numbers as there).
+
+\bibitem[Gem80]{Geman}
+S.~Geman, A limit theorem for the norm of random matrices, \emph{Ann. Probab.} \textbf{8} (1980), no.~2, 252--261.
+
+\bibitem[Lee22]{Leeb}
+W.~Leeb, Optimal singular value shrinkage for operator norm loss: extending to non-square matrices, \emph{Statist. Probab. Lett.} \textbf{186} (2022), 109472, \href{https://doi.org/10.1016/j.spl.2022.109472}{doi:10.1016/j.spl.2022.109472}; \href{https://arxiv.org/abs/2005.11807}{arXiv:2005.11807}.
+
+\bibitem[Shm26a]{BrainFramework}
+Y.~Shmalo, \emph{Brain Framework}, public software repository, 2026, \url{https://github.com/yspennstate/brain-framework-public}.
+
+\bibitem[Shm26b]{MathBrainRepo}
+Y.~Shmalo, \emph{Math Brain: public snapshot, code and tests}, 2026, \url{https://github.com/yspennstate/math-brain-public}.
+
+\bibitem[Shm26c]{MathBrainPaper}
+Y.~Shmalo, \emph{Math Brain: shared, auditable memory for multi-agent mathematical research}, October 2026, \url{https://github.com/yspennstate/math-brain-public/tree/main/papers/math-brain-2026-10-24}.
+
+\end{thebibliography}
+\end{document}
