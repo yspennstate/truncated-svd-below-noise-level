@@ -4,16 +4,18 @@ Source, PDF and simulation code for the paper "Truncating Singular Values Below 
 
 Let W = S + R, where S is an N x M matrix of fixed rank and R has independent N(0, 1/N) entries, with M/N tending to
 c in (0, infinity), so that ||R|| tends to 1 + sqrt(c). Let W_T keep the singular values of W above a cutoff
-T > 1 + sqrt(c) and set the others to zero. The almost sure limit of ||W_T - S|| follows from results of
-Benaych-Georges and Nadakuditi and of Gavish and Donoho. We show that a singular value of S that produces a singular
-value of W above T contributes less than 1 + sqrt(c) to this limit, whatever its size. Hence the limit, and the limits
-of ||(W_T - S)v|| and ||u^T (W_T - S)|| for the singular vectors u, v of S, are below 1 + sqrt(c) if and only if every
-singular value of S that is at least 1 + sqrt(c) produces a singular value of W above T. For every cutoff in
-(1 + sqrt(c), y(1 + sqrt(c))), where y(t) = sqrt((t^2 + 1)(t^2 + c))/t, the limit of ||W_T - S||, where it exists, is
-below 1 + sqrt(c) for every S, with a bound that does not depend on S; for every cutoff above y(1 + sqrt(c)) some S of
-rank one gives a larger limit. The interval, (2, 5/2) for square matrices, contains the cutoff that Gavish and Donoho
-found optimal for the mean squared error. For Gaussian noise this answers a question of Berlyand, Sandier, Shmalo and
-Zhang on pruning random weights.
+T > 1 + sqrt(c) and set the others to zero. Each singular value theta > c^(1/4) of S produces a singular value of W near
+y(theta) = sqrt((theta^2 + 1)(theta^2 + c))/theta. When the singular values of S are distinct and no theta > c^(1/4)
+satisfies y(theta) = T, the almost sure limit of ||W_T - S||, which the argument of Gavish and Donoho gives from results
+of Benaych-Georges and Nadakuditi, is the largest of several numbers, one for each singular value of S. We show that the
+number belonging to a theta > c^(1/4) with y(theta) > T is less than 1 + sqrt(c), whatever its size. Hence the limit,
+and the limits of ||(W_T - S)v|| and ||u^T (W_T - S)|| for the singular vectors u, v of S, are below 1 + sqrt(c) if and
+only if every singular value theta >= 1 + sqrt(c) of S has y(theta) > T. For every cutoff in
+(1 + sqrt(c), y(1 + sqrt(c))) the limit of ||W_T - S|| is below 1 + sqrt(c) for every such S, with a bound that does
+not depend on S; for every cutoff above y(1 + sqrt(c)) some S of rank one gives a limit above 1 + sqrt(c). The
+interval, (2, 5/2) for square matrices, contains the cutoff that Gavish and Donoho found optimal for the mean squared
+error. For Gaussian noise this answers a question of Berlyand, Sandier, Shmalo and Zhang on truncating random weight
+matrices.
 
 ## Contents
 

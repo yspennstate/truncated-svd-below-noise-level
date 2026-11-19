@@ -25,37 +25,38 @@
 
 \title[Truncating singular values below the noise level]{Truncating Singular Values Below the Noise Level}
 \author[Yitzchak Shmalo]{Yitzchak Shmalo}
+\address{Einstein Institute of Mathematics, The Hebrew University of Jerusalem, Jerusalem, Israel}
 \email{yitzchak.shmalo@gmail.com}
 \subjclass[2020]{Primary 60B20; Secondary 15A18, 62H25}
-\keywords{Random matrices, spiked model, singular value truncation, hard thresholding, operator norm}
+\keywords{Random matrices, spiked model, singular value truncation, operator norm}
 
 \begin{document}
 \begin{abstract}
-Let $W=S+R$, where $S$ is an $N\times M$ matrix of fixed rank and $R$ has independent $N(0,1/N)$ entries, with $M/N\to c\in(0,\infty)$, so that $\|R\|\to1+\sqrt c$. Let $W_T$ keep the singular values of $W$ above a cutoff $T>1+\sqrt c$ and set the others to zero. The almost sure limit of $\|W_T-S\|$ follows from results of Benaych-Georges and Nadakuditi and of Gavish and Donoho. We show that a singular value of $S$ that produces a singular value of $W$ above $T$ contributes less than $1+\sqrt c$ to this limit, whatever its size. Hence the limit, and the limits of $\|(W_T-S)v\|$ and $\|u^{\mathsf T}(W_T-S)\|$ for the singular vectors $u$, $v$ of $S$, are below $1+\sqrt c$ if and only if every singular value of $S$ that is at least $1+\sqrt c$ produces a singular value of $W$ above $T$. For every cutoff in $\bigl(1+\sqrt c,\,y(1+\sqrt c)\bigr)$, where $y(t)=\sqrt{(t^2+1)(t^2+c)}/t$, the limit of $\|W_T-S\|$, where it exists, is below $1+\sqrt c$ for every $S$, with a bound that does not depend on $S$; for every cutoff above $y(1+\sqrt c)$ some $S$ of rank one gives a larger limit. The interval, $(2,5/2)$ for square matrices, contains the cutoff that Gavish and Donoho found optimal for the mean squared error. For Gaussian noise this answers a question of Berlyand, Sandier, Shmalo and Zhang on pruning random weights.
+Let $W=S+R$, where $S$ is an $N\times M$ matrix of fixed rank and $R$ has independent $N(0,1/N)$ entries, with $M/N\to c\in(0,\infty)$, so that $\|R\|\to1+\sqrt c$. Let $W_T$ keep the singular values of $W$ above a cutoff $T>1+\sqrt c$ and set the others to zero. Each singular value $\theta>c^{1/4}$ of $S$ produces a singular value of $W$ near $y(\theta)=\sqrt{(\theta^2+1)(\theta^2+c)}/\theta$. When the singular values of $S$ are distinct and no $\theta>c^{1/4}$ satisfies $y(\theta)=T$, the almost sure limit of $\|W_T-S\|$, which the argument of Gavish and Donoho gives from results of Benaych-Georges and Nadakuditi, is the largest of several numbers, one for each singular value of $S$. We show that the number belonging to a $\theta>c^{1/4}$ with $y(\theta)>T$ is less than $1+\sqrt c$, whatever its size. Hence the limit, and the limits of $\|(W_T-S)v\|$ and $\|u^{\mathsf T}(W_T-S)\|$ for the singular vectors $u$, $v$ of $S$, are below $1+\sqrt c$ if and only if every singular value $\theta\ge1+\sqrt c$ of $S$ has $y(\theta)>T$. For every cutoff in $\bigl(1+\sqrt c,\,y(1+\sqrt c)\bigr)$ the limit of $\|W_T-S\|$ is below $1+\sqrt c$ for every such $S$, with a bound that does not depend on $S$; for every cutoff above $y(1+\sqrt c)$ some $S$ of rank one gives a limit above $1+\sqrt c$. The interval, $(2,5/2)$ for square matrices, contains the cutoff that Gavish and Donoho found optimal for the mean squared error. For Gaussian noise this answers a question of Berlyand, Sandier, Shmalo and Zhang on truncating random weight matrices.
 \end{abstract}
 \maketitle
 
 \section{Introduction}\label{sec:intro}
-A weight matrix of a trained network is often modeled as $W=S+R$, a deterministic matrix $S$ of small rank plus a random matrix $R$ with independent entries. Pruning $W$, that is, removing its small singular values, removes most of $R$. Berlyand, Sandier, Shmalo and Zhang~\cite[Example~5.5]{BSSZ} take $R$ to be $N\times N$ with independent $N(0,1/N)$ entries, $S$ with nonzero singular values larger than $1$, and $W'$ the matrix obtained from $W$ by setting to zero its singular values below $2+\epsilon$. For $3000\times3000$ matrices and $S$ diagonal with singular values $30,40,50,60,70$ they observe $\|S-W'\|\approx1$, which is below $2$, the limit of $\|R\|$, and they ask under what conditions on $R$ and $S$ the limiting error is a constant below this limit. Their expression $f_W$~\cite[(37)]{BSSZ} equals $\max_i(1+\theta_i^{-2}-\theta_i^{-4})^{1/2}$ in the nonzero singular values $\theta_1,\dots,\theta_r$ of $S$.
+A weight matrix of a trained network is often modeled as $W=S+R$, a deterministic matrix $S$ of small rank plus a random matrix $R$ with independent entries. Removing the small singular values of $W$, which~\cite{BSSZ} call pruning, removes most of $R$. Berlyand, Sandier, Shmalo and Zhang~\cite[Example~5.5]{BSSZ} take $R$ to be $N\times N$ with independent $N(0,1/N)$ entries, $S$ with nonzero singular values larger than $1$, and $W'$ the matrix obtained from $W$ by setting to zero its singular values below $2+\epsilon$. For $3000\times3000$ matrices and $S$ diagonal with singular values $30,40,50,60,70$ they observe $\|S-W'\|\approx1$, which is below $2$, the limit of $\|R\|$, and they ask under what conditions on $R$ and $S$ the limiting error is a constant below this limit. Their expression $f_W$~\cite[(37)]{BSSZ} equals $\max_i(1+\theta_i^{-2}-\theta_i^{-4})^{1/2}$ in the nonzero singular values $\theta_1,\dots,\theta_r$ of $S$.
 
 We answer the question for Gaussian $R$ of any aspect ratio. Let $R$ be $N\times M$ with independent $N(0,1/N)$ entries and $M/N\to c\in(0,\infty)$, taken for all $N$ as the $N\times M$ corner of one infinite array of independent standard Gaussian variables, divided by $\sqrt N$; then $\|R\|\to e:=1+\sqrt c$ almost surely~\cite{Geman}; we call $e$ the noise level. Here $\|\cdot\|$ is the operator norm of a matrix and the Euclidean norm of a vector. Let $S=\sum_{i=1}^r\theta_iu_iv_i^{\mathsf T}$ with $r$ fixed, deterministic orthonormal $u_i\in\R^N$ and $v_i\in\R^M$, and distinct $\theta_1>\dots>\theta_r>0$ that do not depend on $N$. These are the standing assumptions. For $T>e$ let $W_T$ be obtained from $W=S+R$ by setting to zero the singular values that do not exceed $T$, so that $W'=W_{2+\epsilon}$. Besides $\|W_T-S\|$ we consider the errors along the singular vectors of $S$, namely $\|(W_T-S)v_i\|$ and $\|u_i^{\mathsf T}(W_T-S)\|$. Put
 \begin{equation}\label{eq:y}
 y(t)=\frac{\sqrt{(t^2+1)(t^2+c)}}{t},\qquad t>0 .
 \end{equation}
 
-Two results are known. Benaych-Georges and Nadakuditi~\cite[Theorems~2.8 and~2.9]{BGN} prove that the $i$-th largest singular value of $W$ converges almost surely to $y(\theta_i)$ if $\theta_i>c^{1/4}$ and to $e$ otherwise, and they give the limits of the inner products between the singular vectors of $W$ and those of $S$. The function $y$ decreases on $(0,c^{1/4}]$ and increases on $[c^{1/4},\infty)$, with minimum $y(c^{1/4})=e$. For $T>e$ let $\tau=\tau(T)$ be the unique point of $(c^{1/4},\infty)$ with $y(\tau)=T$. If $\theta_i>\tau$, the singular value of $W$ near $y(\theta_i)$ is above $T$ for large $N$, and we say that $\theta_i$ is kept; if $\theta_i<\tau$, we say that it is removed.
-
-Gavish and Donoho~\cite[Section~5]{GD} consider the matrix $\eta(W)$ obtained by applying a function $\eta$, called a shrinker, to each singular value of $W$. For a conservative shrinker, that is, a continuous $\eta$ with $\eta(\sigma)=0$ for $\sigma\le e+\delta$ and some $\delta>0$~\cite[Definition~3]{GD}, they prove that $\|\eta(W)-S\|$ converges almost surely to the largest of $r$ numbers, one for each $\theta_i$: the norm of a $2\times2$ matrix determined by $c$, $\theta_i$ and the value of $\eta$ at $y(\theta_i)$~\cite[Lemmas~8 and~9]{GD}, whose singular values they compute~\cite[Lemma~13]{GD}. Their results are stated for aspect ratio at most $1$ and apply here after the transposition or the rescaling in the proof of \cref{lem:bgn}. Truncation is the shrinker with $\eta(\sigma)=\sigma$ for $\sigma>T$ and $\eta(\sigma)=0$ for $\sigma\le T$, so $W_T=\eta(W)$. It is not continuous, but~\cite[Lemma~8]{GD} uses continuity of $\eta$ only at $y(\theta_i)$, which holds when $\theta_i\ne\tau$, so for $c\le1$ the limit of $\|W_T-S\|$ is given by~\cite[Lemmas~7--9 and~13]{GD}. The same reduction, after the transposition or the rescaling, gives the limit for every $c>0$ (\cref{thm:main}).
-
-The question of~\cite{BSSZ} is for which $S$ and $T$ this limit is below $e$. A kept $\theta_i=t$ contributes $\rho(t)$ to it, where
+Benaych-Georges and Nadakuditi~\cite[Theorems~2.8 and~2.9]{BGN} prove that the $i$-th largest singular value of $W$ converges almost surely to $y(\theta_i)$ if $\theta_i>c^{1/4}$ and to $e$ otherwise, and they give the limits of the inner products of the corresponding singular vectors of $W$ with $u_i$ and $v_i$; we call $c^{1/4}$ the transition point. Since $y$ increases on $[c^{1/4},\infty)$ from $y(c^{1/4})=e$, for $T>e$ there is a unique $\tau=\tau(T)$ in $(c^{1/4},\infty)$ with $y(\tau)=T$; we say that $\theta_i$ is kept if $\theta_i>\tau$ and removed if $\theta_i<\tau$. Gavish and Donoho~\cite[Section~5]{GD} consider the matrix $\eta(W)$ obtained by applying a function $\eta$, a shrinker, to each singular value of $W$. For a conservative shrinker, that is, a continuous $\eta$ with $\eta(\sigma)=0$ for $\sigma\le e+\delta$ and some $\delta>0$~\cite[Definition~3]{GD}, they reduce the limit of $\|\eta(W)-S\|$ to the largest of $r$ norms of $2\times2$ matrices, one for each $\theta_i$~\cite[Lemmas~8 and~9]{GD}, and compute these norms~\cite[Lemma~13]{GD}. Truncation, $W_T=\eta(W)$ with $\eta(\sigma)=\sigma$ for $\sigma>T$ and $\eta(\sigma)=0$ otherwise, is not continuous, but the argument of~\cite[Section~5]{GD} applies to it when no $\theta_i$ equals $\tau$, and for every $c>0$ (\cref{thm:main}, \cref{sec:proofs}): the limit of $\|W_T-S\|$ is the largest of the contributions of the $\theta_i$, where a removed $\theta_i$ contributes $\theta_i$ itself and a kept $\theta_i=t$ contributes $\rho(t)$, with
 \begin{equation}\label{eq:rho}
-\rho(t)^2=\frac{J+\sqrt{J^2-4K}}2,\qquad J=1+c+\frac{3c}{t^2},\qquad K=c\Bigl(1+\frac1{t^2}\Bigr)\Bigl(1+\frac c{t^2}\Bigr),
+\rho(t)^2=\frac{J+\sqrt{J^2-4K}}2,\qquad J=1+c+\frac{3c}{t^2},\qquad K=c\Bigl(1+\frac1{t^2}\Bigr)\Bigl(1+\frac c{t^2}\Bigr).
 \end{equation}
-and a removed $\theta_i$ contributes $\theta_i$ itself. The answer rests on the estimate
+The question of~\cite{BSSZ} is for which $S$ and $T$ this limit is below $e$, and the formula does not show it. As $t$ decreases to $c^{1/4}$, the squared inner products tend to $0$ and $\rho(t)$ tends to $e$. So $\rho$ is not bounded away from $e$, and the comparison with $e$ has to hold up to the transition point and for every aspect ratio. It does: with $s=\sqrt c$, $\kappa=s/t^2\in(0,1)$ and $P(E)=E^2-JE+K$,
+\[
+P(e^2)=s(1-\kappa)\bigl(2+5s+2s^2-s\kappa\bigr)>0,\qquad 2e^2-J=1+4s+s^2-3s\kappa>0,
+\]
+so $e^2$ lies to the right of both roots of $P$, and
 \begin{equation}\label{eq:below}
 \rho(t)<e\qquad\text{for every }c>0\text{ and every }t>c^{1/4}
 \end{equation}
-(\cref{lem:below}): a kept $\theta_i$ contributes less than the noise level, whatever its size.
+(\cref{lem:below}).
 
 \begin{thm}\label{thm:main}
 Under the standing assumptions let $T>e$, and suppose that $\theta_i\ne\tau$ for every $i$. Almost surely,
@@ -107,6 +108,10 @@ For every $c\in(0,\infty)$, $e<T_*<y(e)$. In particular, under the standing assu
 Since $\rho$ is decreasing and $\tau(T)$ is increasing in $T$, the bound $\max(\rho(\tau),\tau)$ in~\eqref{eq:uniform} is smallest at the cutoff $T_0=y(\tau_0)$, where $\tau_0$ solves $\rho(\tau_0)=\tau_0$. The solution exists and is unique, because $\rho(t)-t$ is strictly decreasing, tends to $e-c^{1/4}>0$ as $t\downarrow c^{1/4}$ and to $-\infty$ as $t\to\infty$. For $c=1$, $\tau_0^2=1+\sqrt2$ and $T_0=(2+\sqrt2)/\sqrt{1+\sqrt2}$, so $\tau_0\approx1.5538$ and $T_0\approx2.1974$. Since $\tau_0=\rho(\tau_0)<e$ by~\eqref{eq:below} and $y$ increases on $[c^{1/4},\infty)$, $T_0=y(\tau_0)$ lies in $(e,y(e))$. For shrinkers, Gavish and Donoho~\cite[Section~6.2]{GD} propose the one that makes the limit of $\|\eta(W)-S\|$ smallest, and Leeb~\cite{Leeb} shows that their shrinker is optimal only for square matrices and finds the optimal one for every aspect ratio.
 \end{rem}
 
+\begin{rem}\label{rem:context}
+The transition at $c^{1/4}$ is the analogue for singular values of the one found by Baik, Ben Arous and P\'ech\'e~\cite{BBP} for the largest eigenvalue in the spiked covariance model. Shabalin and Nobel~\cite{SN} use the limits of the singular values and vectors of $W$ to reconstruct $S$ by a method that acts only on the singular values of $W$, and Donoho, Gavish and Johnstone~\cite{DGJ} find, in the spiked covariance model, the optimal eigenvalue shrinker for each of a family of loss functions that includes operator-norm losses.
+\end{rem}
+
 
 \section{Proofs}\label{sec:proofs}
 Write $\alpha_i=\langle\tilde u_i,u_i\rangle$ and $\beta_i=\langle\tilde v_i,v_i\rangle$, where $\tilde u_i,\tilde v_i$ are unit left and right singular vectors of $W$ for its $i$-th largest singular value $\tilde\sigma_i$, with the sign of the pair $(\tilde u_i,\tilde v_i)$ chosen so that $\beta_i\ge0$. Let $k$ be the number of $i$ with $\theta_i>c^{1/4}$; these are $i=1,\dots,k$.
@@ -120,18 +125,18 @@ and $\langle\tilde u_i,u_j\rangle\to0$, $\langle\tilde v_i,v_j\rangle\to0$ for $
 \end{lem}
 
 \begin{proof}
-For $c\le1$ consider $W^{\mathsf T}=S^{\mathsf T}+R^{\mathsf T}$; $R^{\mathsf T}$ is $M\times N$ with variance $1/N$, the reciprocal of its number of columns, and $M/N\to c$. This is the normalization of~\cite[Section~3.1]{BGN}. For $c>1$ write $R=\sqrt c\,X$, where $X$ has variance $1/M$, and $W=\sqrt c\,(X+S/\sqrt c)$, which is the same normalization with ratio $N/M\to1/c$ and singular values $\theta_i/\sqrt c$. In both cases the formulas~\cite[(9)--(11)]{BGN} become the ones stated; for $c>1$ one checks that $\sqrt c\,y_{1/c}(t/\sqrt c)=y(t)$, where $y_{c'}$ denotes the function~\eqref{eq:y} with $c'$ in place of $c$, and $\sqrt c\,(1/c)^{1/4}=c^{1/4}$.
+For $c\le1$ consider $W^{\mathsf T}=S^{\mathsf T}+R^{\mathsf T}$; $R^{\mathsf T}$ is $M\times N$ with variance $1/N$, the reciprocal of its number of columns, and $M/N\to c$. This is the normalization of~\cite[Section~3.1]{BGN}. For $c>1$ write $R=\sqrt c\,X$, where $X$ has variance $1/M$, and $W=\sqrt c\,(X+S/\sqrt c)$, which is the same normalization with ratio $N/M\to1/c$ and singular values $\theta_i/\sqrt c$. In both cases the formulas~\cite[(9)--(11)]{BGN} become the ones stated; for $c>1$ we use $\sqrt c\,y_{1/c}(t/\sqrt c)=y(t)$, where $y_{c'}$ denotes the function~\eqref{eq:y} with $c'$ in place of $c$; indeed $y_{1/c}(t/\sqrt c)=\sqrt{(t^2/c+1)(t^2/c+1/c)}\,\sqrt c/t=y(t)/\sqrt c$. Since $\sqrt c\,(1/c)^{1/4}=c^{1/4}$, the transition point $(1/c)^{1/4}$ for $\theta_i/\sqrt c$ is the transition point $c^{1/4}$ for $\theta_i$.
 
 The perturbation in~\cite{BGN} has random singular vectors, independent of the noise. A deterministic $S$ reduces to that case. Let $U$, $V$ be independent Haar orthogonal matrices of sizes $N$ and $M$, independent of $R$, and put $R'=U^{\mathsf T}RV$. Given $(U,V)$, $R'$ has independent $N(0,1/N)$ entries, so $R'$ is independent of $(U,V)$ and $W=U(R'+U^{\mathsf T}SV)V^{\mathsf T}$. The vectors $U^{\mathsf T}u_1,\dots,U^{\mathsf T}u_r$ are the first $r$ columns of a Haar orthogonal matrix, which is the orthonormalized model of~\cite[Section~2.1]{BGN} with $\nu$ the standard Gaussian distribution, and likewise for $V^{\mathsf T}v_i$. The singular values of $W$ are those of $R'+U^{\mathsf T}SV$, its singular vectors are obtained by applying $U$ and $V$, and the inner products with $u_i$ and $v_i$ are unchanged.
 
-The limits of $\tilde\sigma_i$, $\alpha_i^2$ and $\beta_i^2$ are~\cite[Theorems~2.8 and~2.9(a), (b)]{BGN}, the inner products $\langle\tilde u_i,u_j\rangle$ and $\langle\tilde v_i,v_j\rangle$ with $j\ne i$ tend to $0$ by~\cite[Theorem~2.9(c)]{BGN}, and $\tilde\sigma_{k+1}\to e$ is~\cite[Theorem~2.8]{BGN} with~\cite{Geman}. The last statement of~\cite[Theorem~2.9(c)]{BGN} relates the two projections: in the orthonormalized model,
+The limits of $\tilde\sigma_i$, $\alpha_i^2$ and $\beta_i^2$ are~\cite[Theorems~2.8 and~2.9(a), (b)]{BGN}, the inner products $\langle\tilde u_i,u_j\rangle$ and $\langle\tilde v_i,v_j\rangle$ with $j\ne i$ tend to $0$ by~\cite[Theorem~2.9(c)]{BGN}, and $\tilde\sigma_{k+1}\to e$ is~\cite[Theorem~2.8]{BGN} with~\cite{Geman}. The last statement of~\cite[Theorem~2.9(c)]{BGN} relates the two inner products: in the orthonormalized model,
 \[
 \langle\tilde u_i,u_i\rangle-\varphi\,\theta_i\,\langle\tilde v_i,v_i\rangle\to0\qquad\text{almost surely},
 \]
 where $\varphi=\int z\,(z^2-x^2)^{-1}\,d\mu(x)>0$, $z$ is the limit of the singular value and $\mu$ is the limiting singular value distribution of the noise, supported below $z$. After the transposition (for $c\le1$) or the rescaling (for $c>1$) this says that one of $\alpha_i,\beta_i$ is, up to a quantity tending to $0$ almost surely, a fixed positive multiple of the other. With the sign of the pair chosen so that $\beta_i\ge0$, as above, $\alpha_i$ is therefore nonnegative up to a quantity tending to $0$. Since $\beta_i^2$ has a positive limit, $\beta_i$ converges, and then so does $\alpha_i$, to the nonnegative square root of the limit of $\alpha_i^2$. Hence $\alpha_i\beta_i$ tends to the nonnegative square root of $(t^4-c)^2/(t^6y(t)^2)$.
 \end{proof}
 
-The rest of the proof of \cref{thm:main} follows~\cite[Section~5]{GD}: \cref{lem:gram} and the proof of \cref{thm:main} give, for truncation, the reduction to $2\times2$ matrices of~\cite[Lemmas~8 and~9]{GD}, and \cref{lem:block} is~\cite[Lemma~13]{GD} at $\eta=y(t)$. The next identity reduces operator norms of sums of rank-one matrices to Gram matrices. For a matrix $A$ write $G_A=A^{\mathsf T}A$.
+The rest of the proof of \cref{thm:main} follows~\cite[Section~5]{GD}. It is given in full because~\cite{GD} state their lemmas for continuous shrinkers and aspect ratio at most $1$: \cref{lem:gram} and the proof of \cref{thm:main} give, for truncation, the reduction to $2\times2$ matrices of~\cite[Lemmas~8 and~9]{GD}, and \cref{lem:block} is~\cite[Lemma~13]{GD} at $\eta=y(t)$. The next identity reduces operator norms of sums of rank-one matrices to Gram matrices. For a matrix $A$ write $G_A=A^{\mathsf T}A$.
 
 \begin{lem}\label{lem:gram}
 For matrices $L$, $C$, $Q$ of sizes $n\times p$, $p\times q$ and $m\times q$, $\|LCQ^{\mathsf T}\|=\|G_L^{1/2}\,C\,G_Q^{1/2}\|$.
@@ -278,7 +283,8 @@ $k$ & number of $i$ with $\theta_i>c^{1/4}$ & \cref{sec:proofs}\\
 $G_A$ & Gram matrix $A^{\mathsf T}A$ & \cref{lem:gram}\\
 $I$ & indices of the kept $\theta_i$, $\{i:\theta_i>\tau\}$ & proof of \cref{thm:main}\\
 $L$, $C$, $Q$ & factors with $W_T-S=LCQ^{\mathsf T}$ & proof of \cref{thm:main}\\
-$s$, $\kappa$, $E$ & $\sqrt c$, $\sqrt c/t^2$, and $\rho(t)^2$ & proof of \cref{lem:below}\\
+$E$ & variable of the quadratic $E^2-JE+K$, equal to $\rho(t)^2$ at its larger root & \cref{sec:intro}\\
+$s$, $\kappa$ & $\sqrt c$ and $\sqrt c/t^2$ & proof of \cref{lem:below}\\
 $P$ & the polynomial $E^2-JE+K$ & proof of \cref{lem:below}\\
 \bottomrule
 \end{tabular}
@@ -286,11 +292,17 @@ $P$ & the polynomial $E^2-JE+K$ & proof of \cref{lem:below}\\
 
 \begin{thebibliography}{Shm26c}
 
+\bibitem[BBP05]{BBP}
+J.~Baik, G.~Ben~Arous and S.~P\'ech\'e, Phase transition of the largest eigenvalue for nonnull complex sample covariance matrices, \emph{Ann. Probab.} \textbf{33} (2005), no.~5, 1643--1697, \href{https://doi.org/10.1214/009117905000000233}{doi:10.1214/009117905000000233}.
+
 \bibitem[BGN12]{BGN}
 F.~Benaych-Georges and R.~R. Nadakuditi, The singular values and vectors of low rank perturbations of large rectangular random matrices, \emph{J. Multivariate Anal.} \textbf{111} (2012), 120--135, \href{https://arxiv.org/abs/1103.2221}{arXiv:1103.2221} (statement numbers as there).
 
 \bibitem[BSSZ24]{BSSZ}
 L.~Berlyand, E.~Sandier, Y.~Shmalo and L.~Zhang, Enhancing accuracy in deep learning using random matrix theory, \emph{J. Mach. Learn.} \textbf{3} (2024), no.~4, 347--412, \href{https://doi.org/10.4208/jml.231220}{doi:10.4208/jml.231220}; \href{https://arxiv.org/abs/2310.03165}{arXiv:2310.03165} (numbering as there).
+
+\bibitem[DGJ18]{DGJ}
+D.~Donoho, M.~Gavish and I.~Johnstone, Optimal shrinkage of eigenvalues in the spiked covariance model, \emph{Ann. Statist.} \textbf{46} (2018), no.~4, 1742--1778, \href{https://doi.org/10.1214/17-AOS1601}{doi:10.1214/17-AOS1601}.
 
 \bibitem[GD14]{GDhard}
 M.~Gavish and D.~L. Donoho, The optimal hard threshold for singular values is $4/\sqrt3$, \emph{IEEE Trans. Inform. Theory} \textbf{60} (2014), no.~8, 5040--5053.
@@ -303,6 +315,9 @@ S.~Geman, A limit theorem for the norm of random matrices, \emph{Ann. Probab.} \
 
 \bibitem[Lee22]{Leeb}
 W.~Leeb, Optimal singular value shrinkage for operator norm loss: extending to non-square matrices, \emph{Statist. Probab. Lett.} \textbf{186} (2022), 109472, \href{https://doi.org/10.1016/j.spl.2022.109472}{doi:10.1016/j.spl.2022.109472}; \href{https://arxiv.org/abs/2005.11807}{arXiv:2005.11807}.
+
+\bibitem[SN13]{SN}
+A.~A. Shabalin and A.~B. Nobel, Reconstruction of a low-rank matrix in the presence of Gaussian noise, \emph{J. Multivariate Anal.} \textbf{118} (2013), 67--76, \href{https://doi.org/10.1016/j.jmva.2013.03.005}{doi:10.1016/j.jmva.2013.03.005}.
 
 \bibitem[Shm26a]{BrainFramework}
 Y.~Shmalo, \emph{Brain Framework}, public software repository, 2026, \url{https://github.com/yspennstate/brain-framework-public}.
